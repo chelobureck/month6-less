@@ -6,7 +6,7 @@ import os
 
 SECRET_JWT = os.environ.get('SECRET_JWT')
 
-_secret_b64 = base64.urlsafe_b64encode(SECRET_JWT.encode('utf-8')).decode('utf-8') # type: ignore
+_secret_b64 = base64.urlsafe_b64encode(SECRET_JWT.encode('utf-8')).decode('utf-8') 
 
 sign_key = jwk_from_dict({'kty': 'oct', 'k': _secret_b64})
 jwt = JWT()

@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'product',
     'users',
-    'rest_framework.authtoken'
+    'rest_framework.authtoken',
+    'drf_yasg'
 ]
 
 REST_FRAMEWORK = {

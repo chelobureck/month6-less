@@ -4,7 +4,7 @@ from product.models import CategoryModel, ProductModel, ReviewModel
 
 @admin.register(ProductModel)
 class ProductModelAdmin(admin.ModelAdmin):
-    list_display = 'title price category'.split()
+    list_display = 'title price category owner'.split()
 
 @admin.register(CategoryModel)
 class CategoryModelAdmin(admin.ModelAdmin):

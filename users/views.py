@@ -10,6 +10,7 @@ from users.email import send_confirm_email
 from users.models import CustomUser
 
 
+
 class RegisterAPIView(CreateAPIView):
 	serializer_class = UserCreateSerializer
 	
@@ -22,6 +23,7 @@ class RegisterAPIView(CreateAPIView):
 
 class AutherizationAPIView(CreateAPIView):
 	serializer_class = UserAuthSerializer
+	# permission_classes = 
 	
 	def create(self, request,):
 		serializer = self.get_serializer(data=request.data)

@@ -1,17 +1,31 @@
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from product.models import ProductModel, CategoryModel, ReviewModel
 from product.serializers import CategoryListSerializer, ProductListSerializer, ReviewListSerializer
+from common.permissions import IsAnonymous, IsOwner
 
 
 class ProductsListAPIView(ListCreateAPIView):
 	queryset = ProductModel.objects.all()
 	serializer_class = ProductListSerializer
+	permission_classes = [IsOwner | IsAnonymous]
+
+	def perform_create(self, serializer):
+		category_data = self.request.data.get('category') # type: ignore
+		category, _ = CategoryModel.objects.get_or_create(**category_data)
+		serializer.save(
+			owner=self.request.user,
+			category=category
+		)
+		category_data = self.request
+		return 
+
+
 
 
 class ProductsDetailAPIView(RetrieveUpdateDestroyAPIView):
 	queryset = ProductModel.objects.all()
 	serializer_class = ProductListSerializer
-	lookup_field = 'id'
+	permission_classes = [IsOwner | IsAnonymous]
 
 
 
@@ -23,7 +37,7 @@ class CategoriesListAPIView(ListCreateAPIView):
 class CategoriesDetailAPIView(RetrieveUpdateDestroyAPIView):
 	queryset = CategoryModel.objects.all()
 	serializer_class = CategoryListSerializer
-	lookup_field = 'id'
+	permission_classes = [IsOwner | IsAnonymous]
 
 
 
@@ -35,7 +49,6 @@ class ReviewsListAPIView(ListCreateAPIView):
 class ReviewsDetailAPIView(RetrieveUpdateDestroyAPIView):
 	queryset = ReviewModel.objects.all()
 	serializer_class = ReviewListSerializer
-	lookup_field = 'id'
 	
 
 

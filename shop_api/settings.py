@@ -154,3 +154,14 @@ EMAIL_CHARSET = 'utf-8'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = "users.CustomUser"
+
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        "AuthToken": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    }
+}

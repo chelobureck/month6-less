@@ -1,4 +1,5 @@
 from django.db import models
+from users.models import CustomUser
 
 
 class CategoryModel(models.Model):
@@ -26,6 +27,7 @@ class ProductModel(models.Model):
     price = models.FloatField()
     category = models.ForeignKey(CategoryModel, on_delete=models.CASCADE, related_name='products')
     rating = models.ManyToManyField(ReviewModel, blank=True)
+    owner = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return f"{self.title} - {self.price}"

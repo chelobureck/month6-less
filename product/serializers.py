@@ -1,6 +1,13 @@
 from rest_framework import serializers
 from product.models import ProductModel, CategoryModel, ReviewModel
 from rest_framework.exceptions import ValidationError
+from users.models import CustomUser
+
+
+class CustomUserSeializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = 'id email'.split()
 
 
 class CategoryListSerializer(serializers.ModelSerializer):
@@ -36,10 +43,13 @@ class ProductDetailSerializer(serializers.ModelSerializer):
 
 
 class ProductListSerializer(serializers.ModelSerializer):
-    category = CategoryListSerializer()
+    category = CategoryListSerializer(read_only=True)
+    # owner = CustomUserSeializer()
     class Meta:
         model = ProductModel
         fields = 'id title price category'.split()
+
+
 
 
 class ProductValidateSerializer(serializers.Serializer):

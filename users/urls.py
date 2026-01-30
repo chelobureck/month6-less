@@ -4,5 +4,4 @@ from users.views import AutherizationAPIView, RegisterAPIView, UserConfirmAPIVie
 urlpatterns = [
 	path('register/', RegisterAPIView.as_view()),
 	path('autherization/', AutherizationAPIView.as_view()),
-	path('confirm/', UserConfirmAPIView.as_view())
 ]

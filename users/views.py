@@ -4,11 +4,15 @@ from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
-from users.serializers import ConfirmUserSerializer, UserAuthSerializer, UserCreateSerializer
-from users.jwt import jwt, sign_key
+from users.serializers import ConfirmUserSerializer, UserAuthSerializer, UserCreateSerializer, CustomTokenObtainPairSerializer
 from users.email import send_confirm_email
 from users.models import CustomUser
+from rest_framework_simplejwt.views import TokenObtainPairView
 
+
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+	serializer_class = CustomTokenObtainPairSerializer 
 
 
 class RegisterAPIView(CreateAPIView):
@@ -36,18 +40,7 @@ class AutherizationAPIView(CreateAPIView):
 
 class UserConfirmAPIView(APIView):
 	def get(self, request):
-		token = request.query_params.get('token')
-		if not token:
-			return Response(status=status.HTTP_400_BAD_REQUEST, data={"error": "token is not"})
-		try:
-			payload = jwt.decode(token, sign_key, do_time_check=True)
-			user_id = payload.get('user_id')
-			user = CustomUser.objects.get(id=user_id)
-			user.is_active = True
-			user.save()
-			return Response(status=status.HTTP_200_OK, data={'response': 'user is active'})
-		except Exception as error:
-			return Response(status=status.HTTP_400_BAD_REQUEST, data={'error': str(error)})
+		pass
 	
 	def post(self, request):
 		serializer = ConfirmUserSerializer(data=request.data)

@@ -2,12 +2,24 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from product.models import ProductModel, CategoryModel, ReviewModel
 from product.serializers import CategoryListSerializer, ProductListSerializer, ReviewListSerializer
 from common.permissions import IsAnonymous, IsOwner
-
+from django.core.cache import cache
+from rest_framework.response import Response
+from rest_framework import status
 
 class ProductsListAPIView(ListCreateAPIView):
 	queryset = ProductModel.objects.all()
 	serializer_class = ProductListSerializer
 	permission_classes = [IsOwner | IsAnonymous]
+
+	def get(self, request, *args, **kwargs):
+		cached_data = cache.get('list_of_product')
+		if cached_data:
+			print("REDIS")
+			return Response(data=cached_data, status=status.HTTP_200_OK)
+		print("DB")
+		response = super().get(self, request, *args, **kwargs)
+		if response.data.get('total', 0) > 0: # type: ignore
+			cache.set("list_of_product", response.data, timeout=60)
 
 	def perform_create(self, serializer):
 		category_data = self.request.data.get('category') # type: ignore
@@ -17,7 +29,7 @@ class ProductsListAPIView(ListCreateAPIView):
 			category=category
 		)
 		category_data = self.request
-		return 
+
 
 
 

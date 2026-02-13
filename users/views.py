@@ -5,10 +5,9 @@ from rest_framework.generics import CreateAPIView
 from django.contrib.auth import authenticate
 from rest_framework.authtoken.models import Token
 from users.serializers import ConfirmUserSerializer, UserAuthSerializer, UserCreateSerializer, CustomTokenObtainPairSerializer
-from users.email import send_confirm_email
 from users.models import CustomUser
 from rest_framework_simplejwt.views import TokenObtainPairView
-
+from users.tasks import add
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -46,9 +45,10 @@ class UserConfirmAPIView(APIView):
 		serializer = ConfirmUserSerializer(data=request.data)
 		serializer.is_valid(raise_exception=True)
 		email = request.data.get('email')
+		add.dellay(2, 5)
 		try: 
 			user = CustomUser.objects.get(email=email)
-			send_confirm_email(user)
+			# send_confirm_email(user)
 			return Response(status=status.HTTP_200_OK)
 		except CustomUser.DoesNotExist:
 			return Response(status=status.HTTP_400_BAD_REQUEST, data={"error": 'incorrect email'})

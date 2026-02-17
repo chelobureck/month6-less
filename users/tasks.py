@@ -1,6 +1,6 @@
 from celery import shared_task
 from django.core.mail import send_mail
-from dajngo.conf import settings
+from django.conf import settings
 from decouple import config
 
 
@@ -13,7 +13,7 @@ def send_otp(email, code):
     send_mail(
         'OTP for registration',
         f'Your OTP is {code}',
-        config('EMAIL_HOST_USER'),
+        config('EMAIL_HOST_USER'), # type: ignore
         [email],
         fail_silently=False,
     )

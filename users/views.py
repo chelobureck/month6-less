@@ -45,7 +45,7 @@ class UserConfirmAPIView(APIView):
 		serializer = ConfirmUserSerializer(data=request.data)
 		serializer.is_valid(raise_exception=True)
 		email = request.data.get('email')
-		add.dellay(2, 5)
+		add.dellay(2, 5) # type: ignore
 		try: 
 			user = CustomUser.objects.get(email=email)
 			# send_confirm_email(user)
